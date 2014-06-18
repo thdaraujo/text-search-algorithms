@@ -44,16 +44,13 @@ public class PerformanceHelper {
 	}
 	
 	public long getRunningTime(){
-		if(this.running)
-			return System.nanoTime() - this.startTime;
-		else
-			return this.stopTime - this.startTime;
+		return this.stopTime - this.startTime;
 	}
 	
 	public String getRunningTimeString(){
 		long elapsedTime = this.getRunningTime();
-		long ms = TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-		return String.format("%f ms", ms);
+		double ms = (double)elapsedTime / 1000000;
+		return String.format("%.3fms", ms);
 	}
 	
 	public void write(){
@@ -77,7 +74,7 @@ public class PerformanceHelper {
 	
 	private String toCSVString(){
 		String now = new SimpleDateFormat("yyyyMMdd-HHmmss").format(Calendar.getInstance().getTime());
-		return MessageFormat.format("{0},{1},{2},{3},{4},{5}", 
+		return MessageFormat.format("{0};{1};{2};{3};{4};{5}", 
 				now, 
 				this.algorithm, 
 				this.startTime, 
@@ -88,9 +85,9 @@ public class PerformanceHelper {
 	
 	public String toString(){
 		String now = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(Calendar.getInstance().getTime());
-		return MessageFormat.format("Date: {0} | Algorithm: {1} | Running Time: {2}", 
+		return MessageFormat.format("{0} | Algorithm: {1} | Running Time: {2}", 
 				now, 
 				this.algorithm, 
-				this.getRunningTime());
+				this.getRunningTimeString());
 	}
 }

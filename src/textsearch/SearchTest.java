@@ -77,5 +77,8 @@ public class SearchTest {
 			System.out.println(textSearch.getAlgorithmName() + ": pattern not found!");
 		}
 		helper.prettyPrint();
+		helper.print();
+		
+		helper.write();
 	}
 }
