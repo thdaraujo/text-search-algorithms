@@ -24,6 +24,11 @@ public class RabinKarpSearch implements ITextSearch {
            RM = (R * RM) % Q;
         patHash = hash(pat, M);
     } 
+    
+    @Override
+	public String getAlgorithmName() {
+		return "Rabin-Karp";
+	}
 
     // Compute hash for key[0..M-1]. 
     private long hash(String key, int M) { 
@@ -68,7 +73,6 @@ public class RabinKarpSearch implements ITextSearch {
             if ((patHash == txtHash) && check(txt, offset))
                 return offset;
         }
-
         // no match
         return N;
     }

@@ -20,6 +20,11 @@ public class BoyerMooreSearch implements ITextSearch {
         for (int j = 0; j < pat.length(); j++)
             right[pat.charAt(j)] = j;
     }
+    
+    @Override
+	public String getAlgorithmName() {
+		return "Boyer-Moore";
+	}
 
     // pattern provided as a character array
     public BoyerMooreSearch(char[] pattern, int R) {

@@ -24,6 +24,11 @@ public class KMPSearch implements ITextSearch {
 			X = dfa[pat.charAt(j)][X]; // Update restart state.
 		}
 	}
+	
+	@Override
+	public String getAlgorithmName() {
+		return "Knuth-Morris-Pratt";
+	}
 
 	// create the DFA from a character array over R-character alphabet
 	public KMPSearch(char[] pattern, int R) {
