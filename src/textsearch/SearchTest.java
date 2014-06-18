@@ -38,16 +38,16 @@ public class SearchTest {
 			for(String line : text){
 				sb.append(line + System.lineSeparator());
 			}
-			runSearch(algorithm, sb.toString(), pattern);
+			runSearch(algorithm, file, sb.toString(), pattern);
 		}
 		catch(IOException ex){
 			System.err.println(ex.getMessage());
 		}
 	}
 	
-	public static void runSearch(String algorithm, String text, String pattern){
+	public static void runSearch(String algorithm, String file, String text, String pattern){
 	
-		PerformanceHelper helper = new PerformanceHelper(outputFileName);
+		PerformanceHelper helper = new PerformanceHelper(file, pattern, outputFileName);
 		helper.start();
 		
 		ITextSearch textSearch = null;
@@ -68,9 +68,10 @@ public class SearchTest {
 		helper.setAlgorithm(textSearch.getAlgorithmName());
 
 		int pos = textSearch.search(text);
-		helper.stop();
+		boolean found = pos >= 0 && pos < text.length();
+		helper.stop(found);
 		
-		if(pos >= 0 && pos < text.length()){
+		if(found){
 			System.out.println(textSearch.getAlgorithmName() + ": pattern " + pattern + " found at position " + pos);
 		}
 		else{
