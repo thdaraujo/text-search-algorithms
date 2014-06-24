@@ -8,28 +8,45 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class SearchTest {
 
-	private static String outputFileName = "SearchTest-Results.txt";
+	private static String outputFileName = "results/SearchTest-Results.txt";
 	
 	public static void main(String[] args) {
+		
+		printInstructions();
+		
 		String algorithm, file, pattern;
+		int runs;
+		
 		if(args == null || args.length < 3){
-			System.out.println("invalid arguments!");
+			System.out.println("Invalid args! See example above!");
 			return;
 		}
-		else{
-			algorithm = args[0];
-			file 	  = args[1];
-			pattern   = args[2];
-		}
-		runTest(algorithm, file, pattern);
-	}
+		
+		algorithm = args[0];
+		file 	  = args[1];
+		pattern   = args[2];
+		runs = args.length > 3? Integer.parseInt(args[3]) : 1;
 	
-	public static void runTest(String algorithm, String file, String pattern){
+		if(algorithm.equals("all")){ //run each algorithm
+			System.out.println("Running all algorithms!");
+			List<String> algs = Arrays.asList("bf", "bm", "kmp", "rk");
+			for(String alg : algs){
+				runTest(alg, file, pattern, runs);
+			}
+		}
+		else{
+			runTest(algorithm, file, pattern, runs);
+		}
+	}
+
+	public static void runTest(String algorithm, String file, String pattern, int runs){
 		try{
 			Path path = Paths.get(file);
 			Charset cs = StandardCharsets.UTF_8;
@@ -38,7 +55,10 @@ public class SearchTest {
 			for(String line : text){
 				sb.append(line + System.lineSeparator());
 			}
-			runSearch(algorithm, file, sb.toString(), pattern);
+			
+			for(int i = 0; i < runs; i++){
+				runSearch(algorithm, file, sb.toString(), pattern);
+			}
 		}
 		catch(IOException ex){
 			System.err.println(ex.getMessage());
@@ -54,6 +74,9 @@ public class SearchTest {
 		switch (algorithm) {
 		case "bf":
 			textSearch = new BruteForceSearch(pattern);
+			break;
+		case "bm":
+			textSearch = new BoyerMooreSearch(pattern);
 			break;
 		case "kmp":
 			textSearch = new KMPSearch(pattern);
@@ -78,8 +101,15 @@ public class SearchTest {
 			System.out.println(textSearch.getAlgorithmName() + ": pattern not found!");
 		}
 		helper.prettyPrint();
-		helper.print();
+		//helper.print();
 		
 		helper.write();
+	}
+	
+	private static void printInstructions() {
+		System.out.println("usage: bf|bm|kmp|rk file_path pattern");
+		System.out.println("ex: kmp \"examples/genoma/Allium_cepa.SES\" GATTACA");
+		System.out.println("algorithms: bf (Brute-Force), bm (Boyer-Moore), kmp (KMP), rk (Rabin-Karp)");
+		System.out.println("");
 	}
 }

@@ -15,7 +15,17 @@ public class BruteForceSearch implements ITextSearch {
 	
 	@Override
 	public int search(String txt) {
-		// TODO Auto-generated method stub
-		return txt.length();
-	}
+        int M = this.pat.length();
+        int N = txt.length();
+
+        for (int i = 0; i <= N - M; i++) {
+            int j;
+            for (j = 0; j < M; j++) {
+                if (txt.charAt(i+j) != pat.charAt(j))
+                    break;
+            }
+            if (j == M) return i;            // found at offset i
+        }
+        return N;                            // not found
+    }
 }
