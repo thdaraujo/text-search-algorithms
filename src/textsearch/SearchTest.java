@@ -34,16 +34,7 @@ public class SearchTest {
 		pattern   = args[2];
 		runs = args.length > 3? Integer.parseInt(args[3]) : 1;
 	
-		if(algorithm.equals("all")){ //run each algorithm
-			System.out.println("Running all algorithms!");
-			List<String> algs = Arrays.asList("bf", "bm", "kmp", "rk");
-			for(String alg : algs){
-				runTest(alg, file, pattern, runs);
-			}
-		}
-		else{
-			runTest(algorithm, file, pattern, runs);
-		}
+		runTest(algorithm, file, pattern, runs);
 	}
 
 	public static void runTest(String algorithm, String file, String pattern, int runs){
@@ -56,8 +47,21 @@ public class SearchTest {
 				sb.append(line + System.lineSeparator());
 			}
 			
-			for(int i = 0; i < runs; i++){
-				runSearch(algorithm, file, sb.toString(), pattern);
+			String textContent = sb.toString();
+			
+			if(algorithm.equals("all")){ //run each algorithm
+				System.out.println("Running all algorithms!");
+				List<String> algs = Arrays.asList("bf", "bm", "kmp", "rk");
+				for(String alg : algs){
+					for(int i = 0; i < runs; i++){
+						runSearch(alg, file, textContent, pattern);
+					}
+				}
+			}
+			else{
+				for(int i = 0; i < runs; i++){
+					runSearch(algorithm, file, textContent, pattern);
+				}
 			}
 		}
 		catch(IOException ex){
@@ -67,22 +71,22 @@ public class SearchTest {
 	
 	public static void runSearch(String algorithm, String file, String text, String pattern){
 	
-		PerformanceHelper helper = new PerformanceHelper(file, pattern, outputFileName);
+		PerformanceHelper helper = new PerformanceHelper(file, text.length(), pattern, outputFileName);
 		helper.start();
 		
 		ITextSearch textSearch = null;
 		switch (algorithm) {
 		case "bf":
-			textSearch = new BruteForceSearch(pattern);
+			textSearch = new BruteForceSearch(pattern, helper);
 			break;
 		case "bm":
-			textSearch = new BoyerMooreSearch(pattern);
+			textSearch = new BoyerMooreSearch(pattern, helper);
 			break;
 		case "kmp":
-			textSearch = new KMPSearch(pattern);
+			textSearch = new KMPSearch(pattern, helper);
 			break;
 		case "rk":
-			textSearch = new RabinKarpSearch(pattern);
+			textSearch = new RabinKarpSearch(pattern, helper);
 			break;
 		default:
 			System.out.println("algorithm not available!");

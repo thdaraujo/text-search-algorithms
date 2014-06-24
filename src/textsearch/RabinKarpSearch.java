@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class RabinKarpSearch implements ITextSearch {
-
+	private PerformanceHelper helper;
 	private String pat;      // the pattern  // needed only for Las Vegas
     private long patHash;    // pattern hash value
     private int M;           // pattern length
@@ -12,7 +12,8 @@ public class RabinKarpSearch implements ITextSearch {
     private int R;           // radix
     private long RM;         // R^(M-1) % Q
 
-    public RabinKarpSearch(String pat) {
+    public RabinKarpSearch(String pat, PerformanceHelper helper) {
+    	this.helper = helper;
         this.pat = pat;      // save pattern (needed only for Las Vegas)
         R = 256;
         M = pat.length();
@@ -33,21 +34,27 @@ public class RabinKarpSearch implements ITextSearch {
     // Compute hash for key[0..M-1]. 
     private long hash(String key, int M) { 
         long h = 0; 
-        for (int j = 0; j < M; j++) 
+        for (int j = 0; j < M; j++) {
             h = (R * h + key.charAt(j)) % Q; 
+            
+            this.helper.addCount();
+        }
         return h; 
     } 
 
     // Las Vegas version: does pat[] match txt[i..i-M+1] ?
     private boolean check(String txt, int i) {
-        for (int j = 0; j < M; j++) 
+        for (int j = 0; j < M; j++) {
             if (pat.charAt(j) != txt.charAt(i + j)) 
                 return false; 
+            this.helper.addCount();
+        }
         return true;
     }
 
     // Monte Carlo version: always return true
     private boolean check(int i) {
+    	this.helper.addCount();
         return true;
     }
 
@@ -72,6 +79,8 @@ public class RabinKarpSearch implements ITextSearch {
             int offset = i - M + 1;
             if ((patHash == txtHash) && check(txt, offset))
                 return offset;
+            
+            this.helper.addCount();
         }
         // no match
         return N;

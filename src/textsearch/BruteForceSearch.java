@@ -1,11 +1,12 @@
 package textsearch;
 
 public class BruteForceSearch implements ITextSearch {
-
+	private PerformanceHelper helper;
 	private String pat; // or the pattern string
 	
-	public BruteForceSearch(String pattern){
+	public BruteForceSearch(String pattern, PerformanceHelper helper){
 		this.pat = pattern;
+		this.helper = helper;
 	}
 	
 	@Override
@@ -21,8 +22,10 @@ public class BruteForceSearch implements ITextSearch {
         for (int i = 0; i <= N - M; i++) {
             int j;
             for (j = 0; j < M; j++) {
-                if (txt.charAt(i+j) != pat.charAt(j))
+                if (txt.charAt(i+j) != pat.charAt(j)){
                     break;
+                }
+                this.helper.addCount();
             }
             if (j == M) return i;            // found at offset i
         }

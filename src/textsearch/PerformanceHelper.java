@@ -17,11 +17,17 @@ public class PerformanceHelper {
 	private boolean running = false;
 	private boolean found = false;
 	
+	private int count = 0;
+	private int textSize;
+	private int patternSize;
 	
-	public PerformanceHelper(String inputFileName, String pattern, String outputFileName){
+	
+	public PerformanceHelper(String inputFileName, int textSize, String pattern, String outputFileName){
 		this.inputFileName = inputFileName;
 		this.outputFileName = outputFileName;
 		this.pattern = pattern;
+		this.textSize = textSize;
+		this.patternSize = pattern.length();
 	}
 	
 	public void setAlgorithm(String algorithm){
@@ -76,7 +82,7 @@ public class PerformanceHelper {
 	
 	private String toCSVString(){
 		String now = new SimpleDateFormat("yyyyMMdd HHmmss").format(Calendar.getInstance().getTime());
-		return MessageFormat.format("{0};{1};{2};{3};{4};{5};{6};{7};{8}", 
+		return MessageFormat.format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}", 
 				now, 
 				this.algorithm,
 				this.inputFileName,
@@ -85,17 +91,39 @@ public class PerformanceHelper {
 				this.startTime, 
 				this.stopTime, 
 				this.getRunningTime(), 
-				this.getRunningTimeString());
+				this.getRunningTimeString(),
+				this.getTextSize(),
+				this.getPatternSize(),
+				this.getCount());
 	}
 	
 	public String toString(){
 		String now = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(Calendar.getInstance().getTime());
-		return MessageFormat.format("{0} | Algorithm: {1} | File: {2} | Pattern: {3} | Found: {4} | Running Time: {5}", 
+		return MessageFormat.format("{0} | Algorithm: {1} | File: {2} | Pattern: {3} | Found: {4} | Running Time: {5} | Text size: {6} | Pattern Size: {7} | Complexity: {8}", 
 				now, 
 				this.algorithm, 
 				this.inputFileName,
 				this.pattern,
 				this.found,
-				this.getRunningTimeString());
+				this.getRunningTimeString(),
+				this.getTextSize(),
+				this.getPatternSize(),
+				this.getCount());
+	}
+
+	public int getTextSize() {
+		return textSize;
+	}
+
+	public int getPatternSize() {
+		return patternSize;
+	}
+	
+	public void addCount(){
+		this.count += 1;
+	}
+	
+	public int getCount(){
+		return this.count;
 	}
 }

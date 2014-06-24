@@ -2,14 +2,17 @@ package textsearch;
 
 public class BoyerMooreSearch implements ITextSearch {
 
+	private PerformanceHelper helper;
+	
 	private final int R;     // the radix
     private int[] right;     // the bad-character skip array
 
     private char[] pattern;  // store the pattern as a character array
     private String pat;      // or as a string
-
+    
     // pattern provided as a string
-    public BoyerMooreSearch(String pat) {
+    public BoyerMooreSearch(String pat, PerformanceHelper helper) {
+    	this.helper = helper;
         this.R = 256;
         this.pat = pat;
 
@@ -54,6 +57,7 @@ public class BoyerMooreSearch implements ITextSearch {
                     skip = Math.max(1, j - right[txt.charAt(i+j)]);
                     break;
                 }
+                this.helper.addCount();
             }
             if (skip == 0) return i;    // found
         }
@@ -73,6 +77,7 @@ public class BoyerMooreSearch implements ITextSearch {
                     skip = Math.max(1, j - right[text[i+j]]);
                     break;
                 }
+                this.helper.addCount();
             }
             if (skip == 0) return i;    // found
         }

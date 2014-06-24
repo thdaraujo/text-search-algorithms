@@ -1,6 +1,8 @@
 package textsearch;
 
 public class KMPSearch implements ITextSearch {
+	
+	private PerformanceHelper helper;
 
 	private final int R; // radix
 	private int[][] dfa; // KMP automata
@@ -9,7 +11,8 @@ public class KMPSearch implements ITextSearch {
 	private String pat; // or the pattern string
 
 	// create the DFA from a String
-	public KMPSearch(String pat) {
+	public KMPSearch(String pat, PerformanceHelper helper) {
+		this.helper = helper;
 		this.R = 256;
 		this.pat = pat;
 
@@ -59,6 +62,7 @@ public class KMPSearch implements ITextSearch {
 		int i, j;
 		for (i = 0, j = 0; i < N && j < M; i++) {
 			j = dfa[txt.charAt(i)][j];
+			this.helper.addCount();
 		}
 		if (j == M)
 			return i - M; // found
@@ -73,6 +77,7 @@ public class KMPSearch implements ITextSearch {
 		int N = text.length;
 		int i, j;
 		for (i = 0, j = 0; i < N && j < M; i++) {
+			this.helper.addCount();
 			j = dfa[text[i]][j];
 		}
 		if (j == M)
